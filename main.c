@@ -1,7 +1,10 @@
 #include "mtll.h"
+#include <stdio.h>
+#include <string.h>
 
 int main(int argc, char** argv) {
-    TODO
-    You should do general input / output management here.
-    return 0;
+    input = char[128];
+    while (fgets(input, sizeof(input), stdin) != NULL) {
+        
+    }
 }

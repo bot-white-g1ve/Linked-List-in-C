@@ -1,9 +1,21 @@
 #ifndef MTLL_H
 #define MTLL_H
 
-struct mtll {
-    // Define your struct here
-};
+typedef enum {
+    INT,
+    FLOAT,
+    CHAR,
+} ValueType;
+
+typedef struct mtll {
+    ValueType t;
+    union {
+        int i;
+        float f;
+        char c;
+    } value;
+    Mtll* next;
+} Mtll;
 
 // A few suggested function prototypes:
 // Feel free to change or improve these as you need.
