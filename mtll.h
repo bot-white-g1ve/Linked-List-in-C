@@ -1,5 +1,9 @@
 #ifndef MTLL_H
 #define MTLL_H
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
 
 typedef enum {
     INT,
@@ -22,13 +26,19 @@ typedef struct mtll {
 // A few suggested function prototypes:
 // Feel free to change or improve these as you need.
 
+extern char* strip(char*);
+
 extern struct mtll *mtll_create(int len);
 
 extern void mtll_free(struct mtll *);
 
 extern void mtll_view(struct mtll *);
 
-extern void mtll_view_all(struct mtll **, size_t);
+extern void mtll_view_all(struct mtll *);
+
+extern void mtll_type(struct mtll *);
+
+extern void mtll_type_all(struct mtll *);
 
 extern void mtll_remove(struct mtll **, size_t, struct mtll *);
 
