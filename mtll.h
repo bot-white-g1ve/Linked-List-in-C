@@ -5,6 +5,7 @@ typedef enum {
     INT,
     FLOAT,
     CHAR,
+    STR,
 } ValueType;
 
 typedef struct mtll {
@@ -13,14 +14,15 @@ typedef struct mtll {
         int i;
         float f;
         char c;
+        char s[128];
     } value;
-    Mtll* next;
+    struct mtll* next;
 } Mtll;
 
 // A few suggested function prototypes:
 // Feel free to change or improve these as you need.
 
-extern struct mtll *mtll_create();
+extern struct mtll *mtll_create(int len);
 
 extern void mtll_free(struct mtll *);
 
