@@ -43,13 +43,13 @@ struct mtll *mtll_create(int len) {
         char *end_index_of_transfering;
         char* input_no_space = strip(input);
         long intVal = strtol(input_no_space, &end_index_of_transfering, 10);
-        if (end_index_of_transfering != input && *end_index_of_transfering == '\0') {
+        if (input_no_space != end_index_of_transfering && *end_index_of_transfering == '\0') {
             newNode->t = INT;
             newNode->value.i = intVal;
             continue;
         } else {
             double floatVal = strtod(input_no_space, &end_index_of_transfering);
-            if (end_index_of_transfering != input && *end_index_of_transfering == '\0') {
+            if (input_no_space != end_index_of_transfering && *end_index_of_transfering == '\0') {
                 newNode->t = FLOAT;
                 newNode->value.f = (float)floatVal;
                 continue;
