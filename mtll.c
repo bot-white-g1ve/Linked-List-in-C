@@ -28,6 +28,11 @@ struct mtll *mtll_create(int len) {
 
     for (int i = 0; i < len; i++) {
         fgets(input, sizeof(input), stdin);
+        if (!strchr(input, '\n')) {
+            // Ignore stdin larger than 128
+            int c;
+            while ((c = getchar()) != '\n' && c != EOF);
+        }
         input[strcspn(input, "\n")] = 0;
 
         struct mtll* newNode = malloc(sizeof(struct mtll));

@@ -63,10 +63,11 @@ int main(int argc, char** argv) {
     DynamicArray* list_of_mtlls = init_Dynamic_Array();
 
     while (fgets(input, sizeof(input), stdin) != NULL) {
-    /*
-        printf("%s", input);
-    }
-    */
+        if (!strchr(input, '\n')) {
+            // Ignore stdin larger than 128
+            int c;
+            while ((c = getchar()) != '\n' && c != EOF);
+        }
         input[strcspn(input, "\n")] = 0;
 
         if (strncmp(input, "NEW ", 4) == 0 || strcmp(input, "NEW") == 0) {
