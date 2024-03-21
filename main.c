@@ -63,6 +63,10 @@ int main(int argc, char** argv) {
     DynamicArray* list_of_mtlls = init_Dynamic_Array();
 
     while (fgets(input, sizeof(input), stdin) != NULL) {
+        printf("%s", input);
+    }
+
+        /*
         input[strcspn(input, "\n")] = 0;
 
         if (strncmp(input, "NEW ", 4) == 0 || strcmp(input, "NEW") == 0) {
@@ -151,4 +155,5 @@ int main(int argc, char** argv) {
     //printf("Free Everything.\n");
     free_everything(list_of_mtlls);
     return 0;
+    */
 }
