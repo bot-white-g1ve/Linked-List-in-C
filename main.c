@@ -89,10 +89,10 @@ int main(int argc, char** argv) {
                     printf("INVALID COMMAND: VIEW\n");
                 } 
             } else if (strcmp(input, "VIEW ALL") == 0){
-                int* size_list_index_available;
-                int* list_index_available = count_Dynamic_Array(list_of_mtlls, size_list_index_available);
-                printf("Number of lists: %d\n", *size_list_index_available);
-                for (int i = 0; i < *size_list_index_available; i++) {
+                int size_list_index_available = 0;
+                int* list_index_available = count_Dynamic_Array(list_of_mtlls, &size_list_index_available);
+                printf("Number of lists: %d\n", size_list_index_available);
+                for (int i = 0; i < size_list_index_available; i++) {
                     printf("List %d\n", list_index_available[i]);
                 }
                 free(list_index_available);
