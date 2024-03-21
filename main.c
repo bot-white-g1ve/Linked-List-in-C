@@ -28,16 +28,18 @@ void add_to_Dynamic_Array(DynamicArray* da, struct mtll* m){
 struct mtll* get_from_Dynamic_Array(DynamicArray* da, int idx){
     return da->array[idx];
 }
-
-int* count_Dynamic_Array(DynamicArray* da){
-    int lists_available[da->size];
+// use a new parameter size to return the size of list_availiable
+int* count_Dynamic_Array(DynamicArray* da, int* size){
+    int* lists_available = malloc(sizeof(int) * da->size);
     int counter = 0;
-    for (index = 0; index < da->size; index++){
+    for (int index = 0; index < da->size; index++){
         if (da->array[index] != NULL){
             lists_available[counter] = index;
             counter++;
         }
     }
+
+    *size = counter; 
 
     return lists_available;
 }
@@ -86,7 +88,15 @@ int main(int argc, char** argv) {
                 }else{
                     printf("INVALID COMMAND: VIEW\n");
                 } 
-            } else {
+            } else if (strcmp(input, "VIEW ALL") == 0){
+                int* size_list_index_available;
+                int* list_index_available = count_Dynamic_Array(list_of_mtlls, size_list_index_available);
+                printf("Number of lists: %d\n", *size_list_index_available);
+                for (int i = 0; i < *size_list_index_available; i++) {
+                    printf("List %d\n", list_index_available[i]);
+                }
+                free(list_index_available);
+            }else {
                 printf("INVALID COMMAND: VIEW\n");
             }
         }else if (strncmp(input, "TYPE ", 5) == 0 || strcmp(input, "TYPE") == 0){
@@ -120,7 +130,7 @@ int main(int argc, char** argv) {
             } else {
                 printf("INVALID COMMAND: REMOVE\n");
             }
-        }else if ()
+        }
         else{
             printf("INVALID COMMAND: INPUT\n");
         }
