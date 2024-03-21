@@ -69,6 +69,10 @@ int main(int argc, char** argv) {
             int len;
             char after_number;
             if (sscanf(input + 4, "%d%c", &len, &after_number) == 1) {
+                if (len <= 0){
+                    printf("INVALID COMMAND: NEW\n");
+                    continue;
+                }
                 struct mtll* created_mtll = mtll_create(len);
                 printf("List %zu: ", list_of_mtlls->size);
                 mtll_view_all(created_mtll);
@@ -123,7 +127,15 @@ int main(int argc, char** argv) {
                 if (target_mtll != NULL) {  
                     mtll_free(target_mtll);
                     list_of_mtlls->array[index] = NULL; 
-                    printf("List %d has been removed.\n", index);
+                    printf("List %d has been removed.\n\n", index);
+
+                    int size_list_index_available = 0;
+                    int* list_index_available = count_Dynamic_Array(list_of_mtlls, &size_list_index_available);
+                    printf("Number of lists: %d\n", size_list_index_available);
+                    for (int i = 0; i < size_list_index_available; i++) {
+                        printf("List %d\n", list_index_available[i]);
+                    }
+                    free(list_index_available);
                 }else{
                     printf("INVALID COMMAND: REMOVE\n");
                 }
