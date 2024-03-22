@@ -44,6 +44,11 @@ int* count_Dynamic_Array(DynamicArray* da, int* size){
     return lists_available;
 }
 
+void change_Dynamic_Array(DynamicArray* da, int idx, Mtll* new){
+    da->array[idx] = new;
+    return;
+}
+
 void free_everything(DynamicArray* da){
     if (da == NULL) return;
 
@@ -147,8 +152,51 @@ int main(int argc, char** argv) {
             } else {
                 printf("INVALID COMMAND: REMOVE\n");
             }
-        }
-        else{
+        }else if (strncmp(input, "INSERT ", 7) == 0 || strcmp(input, "INSERT") == 0){
+            int mtll_index;
+            int list_index;
+            char insertInput[128];
+            if (sscanf(input + 7, "%d %d %127s", &mtll_index, &list_index, insertInput) == 3 && 
+            mtll_index < list_of_mtlls->size) {
+                struct mtll* target_mtll = get_from_Dynamic_Array(list_of_mtlls, mtll_index);
+                if (target_mtll != NULL) {  
+                    Mtll* newhead = mtll_insert(target_mtll, list_index, insertInput);
+                    if (newhead != NULL){
+                        change_Dynamic_Array(list_of_mtlls, mtll_index, newhead);
+                        printf("List %d: ", mtll_index);
+                        mtll_view_all(newhead);
+                    } else if (newhead == NULL){
+                        printf("INVALID COMMAND: INSERT\n");
+                    }
+                }else{
+                    printf("INVALID COMMAND: INSERT\n");
+                }
+            } else {
+                printf("INVALID COMMAND: INSERT\n");
+            }
+        }else if (strncmp(input, "DELETE ", 7) == 0 || strcmp(input, "DELETE") == 0){
+            int mtll_index;
+            int list_index;
+            char* after_number;
+            if (sscanf(input + 7, "%d %d%c", &mtll_index, &list_index, after_number) == 2 && 
+            mtll_index < list_of_mtlls->size) {
+                struct mtll* target_mtll = get_from_Dynamic_Array(list_of_mtlls, mtll_index);
+                if (target_mtll != NULL) {  
+                    Mtll* newhead = mtll_delete(target_mtll, list_index);
+                    if (newhead != NULL){
+                        change_Dynamic_Array(list_of_mtlls, mtll_index, newhead);
+                        printf("List %d: ", mtll_index);
+                        mtll_view_all(newhead);
+                    } else if (newhead == NULL){
+                        printf("INVALID COMMAND: DELETE\n");
+                    }
+                }else{
+                    printf("INVALID COMMAND: DELETE\n");
+                }
+            } else {
+                printf("INVALID COMMAND: DELETE\n");
+            }
+        } else{
             printf("INVALID COMMAND: INPUT\n");
         }
     }

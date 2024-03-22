@@ -10,6 +10,7 @@ typedef enum {
     FLOAT,
     CHAR,
     STR,
+    EMPTY,
 } ValueType;
 
 typedef struct mtll {
@@ -42,8 +43,10 @@ extern void mtll_type_all(struct mtll *);
 
 extern void mtll_remove(struct mtll **, size_t, struct mtll *);
 
-// You will likely need other functions for Parts 2 and 3,
-// And for general input / output management
+extern Mtll* mtll_node_create(char*);
 
+extern Mtll* mtll_insert(struct mtll *, int, char*);
+
+extern Mtll* mtll_delete(struct mtll *, int);
 
 #endif
