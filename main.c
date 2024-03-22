@@ -177,8 +177,8 @@ int main(int argc, char** argv) {
         }else if (strncmp(input, "DELETE ", 7) == 0 || strcmp(input, "DELETE") == 0){
             int mtll_index;
             int list_index;
-            char* after_number;
-            if (sscanf(input + 7, "%d %d%c", &mtll_index, &list_index, after_number) == 2 && 
+            char after_number;
+            if (sscanf(input + 7, "%d %d%c", &mtll_index, &list_index, &after_number) == 2 && 
             mtll_index < list_of_mtlls->size) {
                 struct mtll* target_mtll = get_from_Dynamic_Array(list_of_mtlls, mtll_index);
                 if (target_mtll != NULL) {  
