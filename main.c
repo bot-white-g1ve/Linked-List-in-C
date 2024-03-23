@@ -148,6 +148,8 @@ int main(int argc, char** argv) {
                         printf("List %d\n", list_index_available[i]);
                     }
                     free(list_index_available);
+                } else {
+                    printf("INVALID COMMAND: REMOVE\n");
                 }
             } else {
                 printf("INVALID COMMAND: REMOVE\n");

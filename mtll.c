@@ -234,7 +234,6 @@ Head* mtll_insert(struct head* m, int index, char* input){
             m->next = newNode;
             return m;
         }else{
-            printf("INVALID COMMAND: REMOVE\n");
             return NULL;
         }
     }
