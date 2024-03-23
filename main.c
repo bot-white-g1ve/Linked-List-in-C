@@ -160,7 +160,7 @@ int main(int argc, char** argv) {
             int mtll_index;
             int list_index;
             char insertInput[128];
-            if (sscanf(input + 7, "%d %d %127s", &mtll_index, &list_index, insertInput) == 3 && 
+            if (sscanf(input + 7, "%d %d %[^\n]", &mtll_index, &list_index, insertInput) == 3 && 
             mtll_index < list_of_mtlls->size) {
                 struct mtll* target_mtll = get_from_Dynamic_Array(list_of_mtlls, mtll_index);
                 if (target_mtll != NULL) {  
