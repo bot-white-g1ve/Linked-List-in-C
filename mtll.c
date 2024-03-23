@@ -230,8 +230,9 @@ Head* mtll_insert(struct head* m, int index, char* input){
 
     if (m->isEmpty == true){
         if (index == 0 || index == -1){
-            Mtll* newNode =mtll_node_create(input, &has_curly_brace_variable);
+            Mtll* newNode = mtll_node_create(input, &has_curly_brace_variable);
             m->next = newNode;
+            m->isEmpty = false;
             return m;
         }else{
             return NULL;
