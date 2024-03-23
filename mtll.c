@@ -191,7 +191,6 @@ Mtll* mtll_node_create(char* input, bool* has_curly_brace_variable) {
     //check allocation failure
     if (!newNode) return NULL;
 
-    newNode->next = NULL;
     char *end_index_of_transfering;
     char* input_no_space = strip(input);
     long intVal = strtol(input_no_space, &end_index_of_transfering, 10);
@@ -220,6 +219,8 @@ Mtll* mtll_node_create(char* input, bool* has_curly_brace_variable) {
         }
     }
 
+    newNode->next = NULL;
+
     return newNode;
 }
 
@@ -227,109 +228,104 @@ Head* mtll_insert(struct head* m, int index, char* input){
     if (!m) return NULL;
 
     bool has_curly_brace_variable;
+    Mtll* newNode = mtll_node_create(input, &has_curly_brace_variable);
+
+    if (has_curly_brace_variable == 1){
+        return NULL;
+    }
 
     if (m->isEmpty == true){
         if (index == 0 || index == -1){
-            Mtll* newNode = mtll_node_create(input, &has_curly_brace_variable);
             m->next = newNode;
             m->isEmpty = false;
             return m;
         }else{
             return NULL;
         }
+    } else if (m->isEmpty == false){
+        //deal with negative index
+        int length = 0;
+        Mtll* temp = m->next;
+        while (temp) {
+            length++;
+            temp = temp->next;
+        }
+        if (index < 0) {
+            index = length + 1 + index;
+            if (index < 0) return NULL;
+        }
+
+        if (index == 0) {
+            newNode->next = m->next;
+            m->next = newNode;
+            return m;
+        } else{
+            Mtll* current = m->next;
+            Mtll* previous = NULL;
+
+            int currentPosition = 0;
+            while (current != NULL && currentPosition < index) {
+                previous = current;
+                current = current->next;
+                currentPosition++;
+            }
+
+            if (currentPosition == index) {
+                newNode->next = previous->next;
+                previous->next = newNode;
+                return m;
+            }
+        }
+        
     }
-
-    //deal with negative index
-    int length = 0;
-    Mtll* temp = m->next;
-    while (temp) {
-        length++;
-        temp = temp->next;
-    }
-    if (index < 0) {
-        index = length + 1 + index;
-        if (index < 0) return NULL;
-    }
-
-    if (index == 0) {
-        Mtll* newNode =mtll_node_create(input, &has_curly_brace_variable);
-        if (!newNode) return NULL;
-
-        newNode->next = m->next;
-        m->next = newNode;
-        return m;
-    }
-
-    Mtll* current = m->next;
-    Mtll* previous = NULL;
-
-    int currentPosition = 0;
-    while (current != NULL && currentPosition < index) {
-        previous = current;
-        current = current->next;
-        currentPosition++;
-    }
-
-    if (currentPosition == index) {
-        Mtll* newNode = mtll_node_create(input, &has_curly_brace_variable);
-        if (!newNode) return 0; // Allocation failure
-
-        newNode->next = previous->next;
-        previous->next = newNode;
-        return m;
-    }
-
     return NULL;
 }
 
 Head* mtll_delete(Head* m, int index){
     if (!m) return NULL;
 
-    if (m->next->next == NULL){
-        if (m->isEmpty == false && (index == 0 || index == -1)){
-            m->isEmpty = true;
+    if (m->isEmpty == true){
+        return NULL;
+    } else if (m->isEmpty == false){
+        if (m->next->next == NULL && (index == 0 || index == -1)){
             free(m->next);
             m->next = NULL;
+            m->isEmpty = true;
             return m;
-        }else{
-            return NULL;
         }
-    }
 
-    //deal with negative index
-    int length = 0;
-    Mtll* temp = m->next;
-    while (temp) {
-        length++;
-        temp = temp->next;
-    }
-    if (index < 0) {
-        index = length + index;
-        if (index < 0) return NULL;
-    }
+        //deal with negative index
+        int length = 0;
+        Mtll* temp = m->next;
+        while (temp) {
+            length++;
+            temp = temp->next;
+        }
+        if (index < 0) {
+            index = length + index;
+            if (index < 0) return NULL;
+        }
 
-    if (index == 0 && m->next->next != NULL) {
-        Mtll* newHead = m->next->next;
-        free(m->next);
-        m->next = newHead;
-        return m;
-    }
+        Mtll* current = m->next;
+        Mtll* previous = NULL;
 
-    Mtll* current = m->next;
-    Mtll* previous = NULL;
+        int currentPosition = 0;
+        while (current->next != NULL && currentPosition < index) {
+            previous = current;
+            current = current->next;
+            currentPosition++;
+        }
 
-    int currentPosition = 0;
-    while (current != NULL && currentPosition < index) {
-        previous = current;
-        current = current->next;
-        currentPosition++;
-    }
-
-    if (currentPosition == index) {
-        Mtll* temp_next = current->next;
-        free(current);
-        previous->next = temp_next;
-        return m;
+        if (currentPosition == index) {
+            Mtll* temp_next = current->next;
+            free(current);
+            if (previous == NULL){
+                m -> next  = temp_next;
+            } else {
+                previous->next = temp_next;
+            }
+            return m;
+        }
     }
 
     return NULL;
