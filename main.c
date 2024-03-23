@@ -160,16 +160,26 @@ int main(int argc, char** argv) {
             int mtll_index;
             int list_index;
             char insertInput[128];
-            if (sscanf(input + 7, "%d %d %[^\n]", &mtll_index, &list_index, insertInput) == 3 && 
+            if (sscanf(input + 7, "%d %d", &mtll_index, &list_index) == 2 && 
             mtll_index < list_of_mtlls->size) {
-                struct mtll* target_mtll = get_from_Dynamic_Array(list_of_mtlls, mtll_index);
-                if (target_mtll != NULL) {  
-                    Mtll* newhead = mtll_insert(target_mtll, list_index, insertInput);
-                    if (newhead != NULL){
-                        change_Dynamic_Array(list_of_mtlls, mtll_index, newhead);
-                        printf("List %d: ", mtll_index);
-                        mtll_view_all(newhead);
-                    } else if (newhead == NULL){
+                //Find the second space
+                char* restOfString = strchr(input + 7, ' ');
+                restOfString = strchr(restOfString + 1, ' ');
+
+                if (restOfString != NULL) {
+                    strncpy(insertInput, restOfString + 1, sizeof(insertInput) - 1);
+                    
+                    struct mtll* target_mtll = get_from_Dynamic_Array(list_of_mtlls, mtll_index);
+                    if (target_mtll != NULL) {  
+                        Mtll* newhead = mtll_insert(target_mtll, list_index, insertInput);
+                        if (newhead != NULL){
+                            change_Dynamic_Array(list_of_mtlls, mtll_index, newhead);
+                            printf("List %d: ", mtll_index);
+                            mtll_view_all(newhead);
+                        } else if (newhead == NULL){
+                            printf("INVALID COMMAND: INSERT\n");
+                        }
+                    }else{
                         printf("INVALID COMMAND: INSERT\n");
                     }
                 }else{
