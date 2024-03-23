@@ -63,6 +63,7 @@ void free_everything(DynamicArray* da){
     free(da);
 }
 
+/*
 int main(int argc, char** argv) {
     char input[128];
     DynamicArray* list_of_mtlls = init_Dynamic_Array();
@@ -204,4 +205,13 @@ int main(int argc, char** argv) {
     //printf("Free Everything.\n");
     free_everything(list_of_mtlls);
     return 0;
+}
+*/
+
+int main(int argc, char** argv) {
+    char input[128];
+
+    while (fgets(input, sizeof(input), stdin) != NULL) {
+        printf("%s", input);
+    }
 }
