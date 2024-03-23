@@ -277,7 +277,6 @@ Head* mtll_insert(struct head* m, int index, char* input){
         if (index < 0) {
             index = length + 1 + index;
             if (index < 0) return NULL;
-            printf("index: %d, yes", index);
         }
         
         if (index == 0) {
