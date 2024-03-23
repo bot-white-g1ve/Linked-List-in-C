@@ -27,7 +27,9 @@ struct mtll *mtll_create(int len) {
     char input[128];
 
     for (int i = 0; i < len; i++) {
-        fgets(input, sizeof(input), stdin);
+        if (!fgets(input, sizeof(input), stdin)) {
+            return NULL;
+        }
         if (!strchr(input, '\n')) {
             // Ignore stdin larger than 128
             int c;
@@ -100,6 +102,10 @@ void mtll_view(struct mtll* m) {
 }
 
 void mtll_view_all(struct mtll* m){
+    if (!m){
+        return;
+    }
+
     mtll_view(m);
 
     struct mtll* temp;

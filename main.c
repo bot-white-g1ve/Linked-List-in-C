@@ -63,7 +63,6 @@ void free_everything(DynamicArray* da){
     free(da);
 }
 
-/*
 int main(int argc, char** argv) {
     char input[128];
     DynamicArray* list_of_mtlls = init_Dynamic_Array();
@@ -85,9 +84,13 @@ int main(int argc, char** argv) {
                     continue;
                 }
                 struct mtll* created_mtll = mtll_create(len);
-                printf("List %zu: ", list_of_mtlls->size);
-                mtll_view_all(created_mtll);
-                add_to_Dynamic_Array(list_of_mtlls, created_mtll);
+                if (created_mtll != NULL){
+                    printf("List %zu: ", list_of_mtlls->size);
+                    mtll_view_all(created_mtll);
+                    add_to_Dynamic_Array(list_of_mtlls, created_mtll);
+                } else {
+                    break;
+                }
             } else {
                 printf("INVALID COMMAND: NEW\n");
             }
@@ -206,8 +209,8 @@ int main(int argc, char** argv) {
     free_everything(list_of_mtlls);
     return 0;
 }
-*/
 
+/*
 int main(int argc, char** argv) {
     char input[128];
 
@@ -215,3 +218,4 @@ int main(int argc, char** argv) {
         printf("%s", input);
     }
 }
+*/
