@@ -159,8 +159,9 @@ int main(int argc, char** argv) {
         }else if (strncmp(input, "INSERT ", 7) == 0 || strcmp(input, "INSERT") == 0){
             int mtll_index;
             int list_index;
+            char after_number;
             char insertInput[128];
-            if (sscanf(input + 7, "%d %d", &mtll_index, &list_index) == 2 && 
+            if (sscanf(input + 7, "%d %d%c", &mtll_index, &list_index, &after_number) == 2 && 
             mtll_index < list_of_mtlls->size) {
                 //Find the second space
                 char* restOfString = strchr(input + 7, ' ');
