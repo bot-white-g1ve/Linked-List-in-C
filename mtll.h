@@ -35,6 +35,7 @@ typedef struct head {
     bool isEmpty;
     int size;
     bool hasReference;
+    bool beReferenced;
     struct mtll* next;
 } Head;
 

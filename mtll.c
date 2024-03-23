@@ -48,6 +48,7 @@ struct head *mtll_create(int len) {
         head->next = NULL;
         head->isEmpty = false;
         head->hasReference = false;
+        head->beReferenced = false;
         struct mtll* temp = NULL;
 
         char input[128];

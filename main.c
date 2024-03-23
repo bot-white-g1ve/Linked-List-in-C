@@ -23,6 +23,7 @@ void add_to_Dynamic_Array(DynamicArray* da, struct head* m){
 struct head* get_from_Dynamic_Array(DynamicArray* da, int idx){
     return da->array[idx];
 }
+
 // use a new parameter size to return the size of list_availiable
 int* count_Dynamic_Array(DynamicArray* da, int* size){
     int* lists_available = malloc(sizeof(int) * da->size);
@@ -107,8 +108,17 @@ int main(int argc, char** argv) {
                 int size_list_index_available = 0;
                 int* list_index_available = count_Dynamic_Array(list_of_mtlls, &size_list_index_available);
                 printf("Number of lists: %d\n", size_list_index_available);
+                int idx;
+                struct head* target_mtll;
                 for (int i = 0; i < size_list_index_available; i++) {
-                    printf("List %d\n", list_index_available[i]);
+                    idx = list_index_available[i];
+                    target_mtll = get_from_Dynamic_Array(list_of_mtlls, idx);
+
+                    if (target_mtll->hasReference == false){
+                        printf("List %d\n", idx);
+                    }else {
+                        printf("Nested %d\n", idx);
+                    }
                 }
                 free(list_index_available);
             }else {
@@ -143,8 +153,17 @@ int main(int argc, char** argv) {
                     int size_list_index_available = 0;
                     int* list_index_available = count_Dynamic_Array(list_of_mtlls, &size_list_index_available);
                     printf("Number of lists: %d\n", size_list_index_available);
+                    int idx;
+                    struct head* this_mtll;
                     for (int i = 0; i < size_list_index_available; i++) {
-                        printf("List %d\n", list_index_available[i]);
+                        idx = list_index_available[i];
+                        this_mtll = get_from_Dynamic_Array(list_of_mtlls, idx);
+
+                        if (this_mtll->hasReference == false){
+                            printf("List %d\n", idx);
+                        }else {
+                            printf("Nested %d\n", idx);
+                        }
                     }
                     free(list_index_available);
                 } else {
