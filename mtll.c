@@ -31,21 +31,23 @@ int has_curly_brace(char* str){
 }
 
 int is_reference_format(char* str){
-    if (str[0] != '{') return 0;
-    int i = 1;
-    if (!isdigit(str[i])) return 0;
-    while (isdigit(str[i])) i++;
-    if (str[i] != '}' || str[i+1] != '\0') return 0;
-    return 1;
+    int value;
+    char after;
+    if (sscanf(str, "{%d}%c", &value, &after) == 1) {
+        return value;
+    }
+    return -1;
 }
 
 struct head *mtll_create(int len) {
     if (len != 0){
         bool has_curly_brace_variable = false;
+        bool has_reference_variable = false;
 
         struct head* head = malloc(sizeof(struct head));
         head->next = NULL;
         head->isEmpty = false;
+        head->hasReference = false;
         struct mtll* temp = NULL;
 
         char input[128];
@@ -61,7 +63,7 @@ struct head *mtll_create(int len) {
             }
             input[strcspn(input, "\n")] = 0;
 
-            struct mtll* newNode = mtll_node_create(input, &has_curly_brace_variable);
+            struct mtll* newNode = mtll_node_create(input, &has_curly_brace_variable, &has_reference_variable);
 
             if (head->next == NULL) {
                 head->next = newNode;
@@ -72,6 +74,9 @@ struct head *mtll_create(int len) {
         }
 
         if (has_curly_brace_variable == false) {
+            if (has_reference_variable == true){
+                head->hasReference = true;
+            }
             return head;
         }else{
             printf("INVALID COMMAND: NEW\n");
@@ -101,6 +106,9 @@ void mtll_view(struct mtll* m) {
             break;
         case STR:
             printf("%s", m->value.s);
+            break;
+        case REFERENCE:
+            printf("{List %d}", m->value.r);
             break;
         default:
             printf("Unknown type of mtll.\n");
@@ -144,6 +152,9 @@ void mtll_type(struct mtll* m){
         case STR:
             printf("string");
             break;
+        case REFERENCE:
+            printf("reference");
+            break;
         default:
             printf("Unknown type of mtll.\n");
     }
@@ -186,10 +197,19 @@ void mtll_free(struct head* m) {
     m = NULL;
 }
 
-Mtll* mtll_node_create(char* input, bool* has_curly_brace_variable) {
+Mtll* mtll_node_create(char* input, bool* has_curly_brace_variable, bool* has_reference) {
     Mtll* newNode = (Mtll*)malloc(sizeof(Mtll));
     //check allocation failure
     if (!newNode) return NULL;
+
+    int num_of_reference = is_reference_format(input);
+    if (num_of_reference != -1){
+        *has_reference = true;
+        newNode->t = REFERENCE;
+        newNode->value.r = num_of_reference;
+        newNode->next = NULL;
+        return newNode;
+    }
 
     char *end_index_of_transfering;
     char* input_no_space = strip(input);
@@ -228,9 +248,10 @@ Head* mtll_insert(struct head* m, int index, char* input){
     if (!m) return NULL;
 
     bool has_curly_brace_variable;
-    Mtll* newNode = mtll_node_create(input, &has_curly_brace_variable);
+    bool has_reference_variable;
+    Mtll* newNode = mtll_node_create(input, &has_curly_brace_variable, &has_reference_variable);
 
-    if (has_curly_brace_variable == 1){
+    if (has_curly_brace_variable == true){
         return NULL;
     }
 
@@ -238,6 +259,9 @@ Head* mtll_insert(struct head* m, int index, char* input){
         if (index == 0 || index == -1){
             m->next = newNode;
             m->isEmpty = false;
+            if (has_reference_variable == true){
+                m->hasReference = true;
+            }
             return m;
         }else{
             return NULL;
@@ -253,9 +277,7 @@ Head* mtll_insert(struct head* m, int index, char* input){
         if (index < 0) {
             index = length + 1 + index;
             if (index < 0) return NULL;
-        }
-
-        if (index == 0) {
+        }else if (index == 0) {
             newNode->next = m->next;
             m->next = newNode;
             return m;
@@ -278,6 +300,7 @@ Head* mtll_insert(struct head* m, int index, char* input){
         }
         
     }
+    
     return NULL;
 }
 

@@ -3,11 +3,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-typedef struct {
-    struct head** array;
-    size_t size;
-} DynamicArray;
-
 DynamicArray* init_Dynamic_Array(){
     DynamicArray* da = malloc(sizeof(DynamicArray));
     da->array = NULL;
@@ -85,7 +80,11 @@ int main(int argc, char** argv) {
                 }
                 struct head* created_mtll = mtll_create(len);
                 if (created_mtll != NULL){
-                    printf("List %zu: ", list_of_mtlls->size);
+                    if (created_mtll->hasReference == false){
+                        printf("List %zu: ", list_of_mtlls->size);
+                    }else {
+                        printf("Nested %zu: ", list_of_mtlls->size);
+                    }
                     mtll_view_all(created_mtll);
                     add_to_Dynamic_Array(list_of_mtlls, created_mtll);
                 } 
@@ -171,7 +170,11 @@ int main(int argc, char** argv) {
                     Head* newhead = mtll_insert(target_mtll, list_index, insertInput);
                     if (newhead != NULL){
                         change_Dynamic_Array(list_of_mtlls, mtll_index, newhead);
-                        printf("List %d: ", mtll_index);
+                        if (target_mtll->hasReference == false){
+                            printf("List %d: ", mtll_index);
+                        }else {
+                            printf("Nested %d: ", mtll_index);
+                        }
                         mtll_view_all(newhead);
                     } else if (newhead == NULL){
                         printf("INVALID COMMAND: INSERT\n");
@@ -193,7 +196,11 @@ int main(int argc, char** argv) {
                     Head* newhead = mtll_delete(target_mtll, list_index);
                     if (newhead != NULL){
                         change_Dynamic_Array(list_of_mtlls, mtll_index, newhead);
-                        printf("List %d: ", mtll_index);
+                        if (target_mtll->hasReference == false){
+                            printf("List %d: ", mtll_index);
+                        }else {
+                            printf("Nested %d: ", mtll_index);
+                        }
                         mtll_view_all(newhead);
                     } else if (newhead == NULL){
                         printf("INVALID COMMAND: DELETE\n");

@@ -6,6 +6,11 @@
 #include <ctype.h>
 #include <stdbool.h>
 
+typedef struct {
+    struct head** array;
+    size_t size;
+} DynamicArray;
+
 typedef enum {
     INT,
     FLOAT,
@@ -54,7 +59,7 @@ extern void mtll_type_all(struct head *);
 
 extern void mtll_remove(struct mtll **, size_t, struct mtll *);
 
-extern Mtll* mtll_node_create(char*, bool*);
+extern Mtll* mtll_node_create(char*, bool*, bool*);
 
 extern Head* mtll_insert(struct head *, int, char*);
 
