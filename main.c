@@ -79,7 +79,7 @@ int main(int argc, char** argv) {
             int len;
             char after_number;
             if (sscanf(input + 4, "%d%c", &len, &after_number) == 1) {
-                if (len <= 0){
+                if (len < 0){
                     printf("INVALID COMMAND: NEW\n");
                     continue;
                 }

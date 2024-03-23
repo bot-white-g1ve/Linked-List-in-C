@@ -21,63 +21,74 @@ char* strip(char* str){
 }
 
 struct mtll *mtll_create(int len) {
-    struct mtll* head = NULL;
-    struct mtll* temp = NULL;
+    if (len != 0){
+        struct mtll* head = NULL;
+        struct mtll* temp = NULL;
 
-    char input[128];
+        char input[128];
 
-    for (int i = 0; i < len; i++) {
-        if (!fgets(input, sizeof(input), stdin)) {
-            return NULL;
-        }
-        if (!strchr(input, '\n')) {
-            // Ignore stdin larger than 128
-            int c;
-            while ((c = getchar()) != '\n' && c != EOF);
-        }
-        input[strcspn(input, "\n")] = 0;
+        for (int i = 0; i < len; i++) {
+            if (!fgets(input, sizeof(input), stdin)) {
+                return NULL;
+            }
+            if (!strchr(input, '\n')) {
+                // Ignore stdin larger than 128
+                int c;
+                while ((c = getchar()) != '\n' && c != EOF);
+            }
+            input[strcspn(input, "\n")] = 0;
 
-        struct mtll* newNode = malloc(sizeof(struct mtll));
-        //check allocation failure
-        if (!newNode) return NULL;
-        newNode->next = NULL;
+            struct mtll* newNode = malloc(sizeof(struct mtll));
+            //check allocation failure
+            if (!newNode) return NULL;
+            newNode->next = NULL;
 
-        if (head == NULL) {
-            head = newNode;
-        } else {
-            temp->next = newNode;
-        }
-        temp = newNode;
+            if (head == NULL) {
+                head = newNode;
+            } else {
+                temp->next = newNode;
+            }
+            temp = newNode;
 
-        char *end_index_of_transfering;
-        char* input_no_space = strip(input);
-        long intVal = strtol(input_no_space, &end_index_of_transfering, 10);
-        if (input_no_space != end_index_of_transfering && *end_index_of_transfering == '\0') {
-            newNode->t = INT;
-            newNode->value.i = intVal;
-            continue;
-        } else {
-            double floatVal = strtod(input_no_space, &end_index_of_transfering);
+            char *end_index_of_transfering;
+            char* input_no_space = strip(input);
+            long intVal = strtol(input_no_space, &end_index_of_transfering, 10);
             if (input_no_space != end_index_of_transfering && *end_index_of_transfering == '\0') {
-                newNode->t = FLOAT;
-                newNode->value.f = (float)floatVal;
+                newNode->t = INT;
+                newNode->value.i = intVal;
                 continue;
             } else {
-                char charVal;
-                if (sscanf(input, "%c", &charVal) == 1 && input[1] == '\0' && isprint((unsigned char)charVal)){
-                    newNode->t = CHAR;
-                    newNode->value.c = input[0];
+                double floatVal = strtod(input_no_space, &end_index_of_transfering);
+                if (input_no_space != end_index_of_transfering && *end_index_of_transfering == '\0') {
+                    newNode->t = FLOAT;
+                    newNode->value.f = (float)floatVal;
                     continue;
-                }else {
-                    newNode->t = STR;
-                    strncpy(newNode->value.s, input, sizeof(newNode->value.s) - 1);
-                    newNode->value.s[sizeof(newNode->value.s) - 1] = '\0';
-                    continue;
+                } else {
+                    char charVal;
+                    if (sscanf(input, "%c", &charVal) == 1 && input[1] == '\0' && isprint((unsigned char)charVal)){
+                        newNode->t = CHAR;
+                        newNode->value.c = input[0];
+                        continue;
+                    }else {
+                        newNode->t = STR;
+                        strncpy(newNode->value.s, input, sizeof(newNode->value.s) - 1);
+                        newNode->value.s[sizeof(newNode->value.s) - 1] = '\0';
+                        continue;
+                    }
                 }
             }
         }
+
+        return head;
+    } else if (len == 0) {
+        Mtll* head = (Mtll*)malloc(sizeof(Mtll));
+        head -> next = NULL;
+        head -> t = EMPTY;
+
+        return head;
     }
-    return head;
+
+    return NULL;
 }
 
 void mtll_view(struct mtll* m) {
