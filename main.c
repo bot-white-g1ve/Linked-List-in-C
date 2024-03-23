@@ -161,26 +161,21 @@ int main(int argc, char** argv) {
             int list_index;
             char after_number;
             char insertInput[128];
-            if (sscanf(input + 7, "%d %d%c", &mtll_index, &list_index, &after_number) == 2 && 
-            mtll_index < list_of_mtlls->size) {
+            if (sscanf(input + 7, "%d %d%c", &mtll_index, &list_index, &after_number) == 3 && 
+            mtll_index < list_of_mtlls->size && after_number == ' ') {
                 //Find the second space
                 char* restOfString = strchr(input + 7, ' ');
                 restOfString = strchr(restOfString + 1, ' ');
-
-                if (restOfString != NULL) {
-                    strncpy(insertInput, restOfString + 1, sizeof(insertInput) - 1);
+                strncpy(insertInput, restOfString + 1, sizeof(insertInput) - 1);
                     
-                    struct mtll* target_mtll = get_from_Dynamic_Array(list_of_mtlls, mtll_index);
-                    if (target_mtll != NULL) {  
-                        Mtll* newhead = mtll_insert(target_mtll, list_index, insertInput);
-                        if (newhead != NULL){
-                            change_Dynamic_Array(list_of_mtlls, mtll_index, newhead);
-                            printf("List %d: ", mtll_index);
-                            mtll_view_all(newhead);
-                        } else if (newhead == NULL){
-                            printf("INVALID COMMAND: INSERT\n");
-                        }
-                    }else{
+                struct mtll* target_mtll = get_from_Dynamic_Array(list_of_mtlls, mtll_index);
+                if (target_mtll != NULL) {  
+                    Mtll* newhead = mtll_insert(target_mtll, list_index, insertInput);
+                    if (newhead != NULL){
+                        change_Dynamic_Array(list_of_mtlls, mtll_index, newhead);
+                        printf("List %d: ", mtll_index);
+                        mtll_view_all(newhead);
+                    } else if (newhead == NULL){
                         printf("INVALID COMMAND: INSERT\n");
                     }
                 }else{
