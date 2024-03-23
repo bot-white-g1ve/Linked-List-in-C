@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <stdbool.h>
 
 char* strip(char* str){
     char* end;
@@ -20,9 +21,31 @@ char* strip(char* str){
     return str;
 }
 
-struct mtll *mtll_create(int len) {
+int has_curly_brace(char* str){
+    for (int i = 0; str[i] != '\0'; i++) {
+        if (str[i] == '{' || str[i] == '}') {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int is_reference_format(char* str){
+    if (str[0] != '{') return 0;
+    int i = 1;
+    if (!isdigit(str[i])) return 0;
+    while (isdigit(str[i])) i++;
+    if (str[i] != '}' || str[i+1] != '\0') return 0;
+    return 1;
+}
+
+struct head *mtll_create(int len) {
     if (len != 0){
-        struct mtll* head = NULL;
+        bool has_curly_brace_variable = false;
+
+        struct head* head = malloc(sizeof(struct head));
+        head->next = NULL;
+        head->isEmpty = false;
         struct mtll* temp = NULL;
 
         char input[128];
@@ -38,52 +61,26 @@ struct mtll *mtll_create(int len) {
             }
             input[strcspn(input, "\n")] = 0;
 
-            struct mtll* newNode = malloc(sizeof(struct mtll));
-            //check allocation failure
-            if (!newNode) return NULL;
-            newNode->next = NULL;
+            struct mtll* newNode = mtll_node_create(input, &has_curly_brace_variable);
 
-            if (head == NULL) {
-                head = newNode;
-            } else {
+            if (head->next == NULL) {
+                head->next = newNode;
+            } else{
                 temp->next = newNode;
             }
             temp = newNode;
-
-            char *end_index_of_transfering;
-            char* input_no_space = strip(input);
-            long intVal = strtol(input_no_space, &end_index_of_transfering, 10);
-            if (input_no_space != end_index_of_transfering && *end_index_of_transfering == '\0') {
-                newNode->t = INT;
-                newNode->value.i = intVal;
-                continue;
-            } else {
-                double floatVal = strtod(input_no_space, &end_index_of_transfering);
-                if (input_no_space != end_index_of_transfering && *end_index_of_transfering == '\0') {
-                    newNode->t = FLOAT;
-                    newNode->value.f = (float)floatVal;
-                    continue;
-                } else {
-                    char charVal;
-                    if (sscanf(input, "%c", &charVal) == 1 && input[1] == '\0' && isprint((unsigned char)charVal)){
-                        newNode->t = CHAR;
-                        newNode->value.c = input[0];
-                        continue;
-                    }else {
-                        newNode->t = STR;
-                        strncpy(newNode->value.s, input, sizeof(newNode->value.s) - 1);
-                        newNode->value.s[sizeof(newNode->value.s) - 1] = '\0';
-                        continue;
-                    }
-                }
-            }
         }
 
-        return head;
+        if (has_curly_brace_variable == false) {
+            return head;
+        }else{
+            printf("INVALID COMMAND: NEW\n");
+            return NULL;
+        }
     } else if (len == 0) {
-        Mtll* head = (Mtll*)malloc(sizeof(Mtll));
+        Head* head = (Head*)malloc(sizeof(Head));
         head -> next = NULL;
-        head -> t = EMPTY;
+        head -> isEmpty = true;
 
         return head;
     }
@@ -105,29 +102,32 @@ void mtll_view(struct mtll* m) {
         case STR:
             printf("%s", m->value.s);
             break;
-        case EMPTY:
-            break;
         default:
             printf("Unknown type of mtll.\n");
     }
 }
 
-void mtll_view_all(struct mtll* m){
+void mtll_view_all(struct head* m){
     if (!m){
+        printf("this pointer is NULL.\n");
         return;
     }
+    
+    if (m->isEmpty == false){
+        struct mtll* temp;
+        temp = m->next;
 
-    mtll_view(m);
-
-    struct mtll* temp;
-    temp = m;
-
-    while (temp->next != NULL){
-        printf(" -> ");
-        temp = temp->next;
         mtll_view(temp);
+
+        while (temp->next != NULL){
+            printf(" -> ");
+            temp = temp->next;
+            mtll_view(temp);
+        }
+        printf("\n");
+    }else if (m->isEmpty == true){
+        printf("\n");
     }
-    printf("\n");
 }
 
 void mtll_type(struct mtll* m){
@@ -144,29 +144,36 @@ void mtll_type(struct mtll* m){
         case STR:
             printf("string");
             break;
-        case EMPTY:
-            break;
         default:
             printf("Unknown type of mtll.\n");
     }
 }
 
-void mtll_type_all(struct mtll* m){
-    mtll_type(m);
-
-    struct mtll* temp;
-    temp = m;
-
-    while (temp->next != NULL){
-        printf(" -> ");
-        temp = temp->next;
-        mtll_type(temp);
+void mtll_type_all(struct head* m){
+    if (!m){
+        printf("this pointer is NULL.\n");
+        return;
     }
-    printf("\n");
+    
+    if (m->isEmpty == false){
+        struct mtll* temp;
+        temp = m->next;
+
+        mtll_type(temp);
+
+        while (temp->next != NULL){
+            printf(" -> ");
+            temp = temp->next;
+            mtll_type(temp);
+        }
+        printf("\n");
+    }else if (m->isEmpty == true){
+        printf("\n");
+    }
 }
 
-void mtll_free(struct mtll* m) {
-    struct mtll* temp_pointer = m;
+void mtll_free(struct head* m) {
+    struct mtll* temp_pointer = m->next;
     struct mtll* temp_next = NULL;
     
     while (temp_pointer != NULL) {
@@ -175,10 +182,11 @@ void mtll_free(struct mtll* m) {
         temp_pointer = temp_next;
     }
 
+    free(m);
     m = NULL;
 }
 
-Mtll* mtll_node_create(char* input){
+Mtll* mtll_node_create(char* input, bool* has_curly_brace_variable) {
     Mtll* newNode = (Mtll*)malloc(sizeof(Mtll));
     //check allocation failure
     if (!newNode) return NULL;
@@ -196,6 +204,10 @@ Mtll* mtll_node_create(char* input){
             newNode->t = FLOAT;
             newNode->value.f = (float)floatVal;
         } else {
+            if (has_curly_brace(input) == 1){
+                *has_curly_brace_variable = true;
+            }
+
             char charVal;
             if (sscanf(input, "%c", &charVal) == 1 && input[1] == '\0' && isprint((unsigned char)charVal)){
                 newNode->t = CHAR;
@@ -211,41 +223,44 @@ Mtll* mtll_node_create(char* input){
     return newNode;
 }
 
-Mtll* mtll_insert(struct mtll* m, int index, char* input){
+Head* mtll_insert(struct head* m, int index, char* input){
     if (!m) return NULL;
 
-    if (m->t == EMPTY){
+    bool has_curly_brace_variable;
+
+    if (m->isEmpty == true){
         if (index == 0 || index == -1){
-            Mtll* newNode =mtll_node_create(input);
-            free(m);
-            return newNode;
+            Mtll* newNode =mtll_node_create(input, &has_curly_brace_variable);
+            m->next = newNode;
+            return m;
         }else{
+            printf("INVALID COMMAND: REMOVE\n");
             return NULL;
         }
     }
 
+    //deal with negative index
     int length = 0;
-    Mtll* temp = m;
+    Mtll* temp = m->next;
     while (temp) {
         length++;
         temp = temp->next;
     }
-
     if (index < 0) {
         index = length + 1 + index;
         if (index < 0) return NULL;
     }
 
     if (index == 0) {
-        Mtll* newNode =mtll_node_create(input);
+        Mtll* newNode =mtll_node_create(input, &has_curly_brace_variable);
         if (!newNode) return NULL;
 
-        newNode->next = m;
-        m = newNode;
+        newNode->next = m->next;
+        m->next = newNode;
         return m;
     }
 
-    Mtll* current = m;
+    Mtll* current = m->next;
     Mtll* previous = NULL;
 
     int currentPosition = 0;
@@ -256,7 +271,7 @@ Mtll* mtll_insert(struct mtll* m, int index, char* input){
     }
 
     if (currentPosition == index) {
-        Mtll* newNode = mtll_node_create(input);
+        Mtll* newNode = mtll_node_create(input, &has_curly_brace_variable);
         if (!newNode) return 0; // Allocation failure
 
         newNode->next = previous->next;
@@ -267,37 +282,40 @@ Mtll* mtll_insert(struct mtll* m, int index, char* input){
     return NULL;
 }
 
-Mtll* mtll_delete(Mtll* m, int index){
+Head* mtll_delete(Head* m, int index){
     if (!m) return NULL;
 
-    if (m->next == NULL){
-        if (m->t != EMPTY && (index == 0 || index == -1)){
-            m->t = EMPTY;
+    if (m->next->next == NULL){
+        if (m->isEmpty == false && (index == 0 || index == -1)){
+            m->isEmpty = true;
+            free(m->next);
+            m->next = NULL;
             return m;
         }else{
             return NULL;
         }
     }
 
+    //deal with negative index
     int length = 0;
-    Mtll* temp = m;
+    Mtll* temp = m->next;
     while (temp) {
         length++;
         temp = temp->next;
     }
-
     if (index < 0) {
         index = length + index;
         if (index < 0) return NULL;
     }
 
-    if (index == 0 && m->next != NULL) {
-        Mtll* newHead = m->next;
-        free(m);
-        return newHead;
+    if (index == 0 && m->next->next != NULL) {
+        Mtll* newHead = m->next->next;
+        free(m->next);
+        m->next = newHead;
+        return m;
     }
 
-    Mtll* current = m;
+    Mtll* current = m->next;
     Mtll* previous = NULL;
 
     int currentPosition = 0;

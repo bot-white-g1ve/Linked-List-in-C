@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 typedef struct {
-    struct mtll** array;
+    struct head** array;
     size_t size;
 } DynamicArray;
 
@@ -15,7 +15,7 @@ DynamicArray* init_Dynamic_Array(){
     return da;
 }
 
-void add_to_Dynamic_Array(DynamicArray* da, struct mtll* m){
+void add_to_Dynamic_Array(DynamicArray* da, struct head* m){
     da->size += 1;
     da->array = realloc(da->array, da->size * sizeof(struct mtll));
     if (da->array == NULL){
@@ -25,7 +25,7 @@ void add_to_Dynamic_Array(DynamicArray* da, struct mtll* m){
     da->array[da->size-1] = m;
 }
 
-struct mtll* get_from_Dynamic_Array(DynamicArray* da, int idx){
+struct head* get_from_Dynamic_Array(DynamicArray* da, int idx){
     return da->array[idx];
 }
 // use a new parameter size to return the size of list_availiable
@@ -44,7 +44,7 @@ int* count_Dynamic_Array(DynamicArray* da, int* size){
     return lists_available;
 }
 
-void change_Dynamic_Array(DynamicArray* da, int idx, Mtll* new){
+void change_Dynamic_Array(DynamicArray* da, int idx, Head* new){
     da->array[idx] = new;
     return;
 }
@@ -83,14 +83,12 @@ int main(int argc, char** argv) {
                     printf("INVALID COMMAND: NEW\n");
                     continue;
                 }
-                struct mtll* created_mtll = mtll_create(len);
+                struct head* created_mtll = mtll_create(len);
                 if (created_mtll != NULL){
                     printf("List %zu: ", list_of_mtlls->size);
                     mtll_view_all(created_mtll);
                     add_to_Dynamic_Array(list_of_mtlls, created_mtll);
-                } else {
-                    break;
-                }
+                } 
             } else {
                 printf("INVALID COMMAND: NEW\n");
             }
@@ -99,7 +97,7 @@ int main(int argc, char** argv) {
             char after_number;
             if (sscanf(input + 5, "%d%c", &index, &after_number) == 1 && 
             index < list_of_mtlls->size) {
-                struct mtll* target_mtll = get_from_Dynamic_Array(list_of_mtlls, index);
+                struct head* target_mtll = get_from_Dynamic_Array(list_of_mtlls, index);
                 // check if it is removed
                 if (target_mtll != NULL) {  
                     mtll_view_all(target_mtll);
@@ -122,7 +120,7 @@ int main(int argc, char** argv) {
             char after_number;
             if (sscanf(input + 5, "%d%c", &index, &after_number) == 1 && 
             index < list_of_mtlls->size) {
-                struct mtll* target_mtll = get_from_Dynamic_Array(list_of_mtlls, index);
+                struct head* target_mtll = get_from_Dynamic_Array(list_of_mtlls, index);
                 // check if it is removed
                 if (target_mtll != NULL) {  
                     mtll_type_all(target_mtll);
@@ -137,7 +135,7 @@ int main(int argc, char** argv) {
             char after_number;
             if (sscanf(input + 7, "%d%c", &index, &after_number) == 1 && 
             index < list_of_mtlls->size) {
-                struct mtll* target_mtll = get_from_Dynamic_Array(list_of_mtlls, index);
+                struct head* target_mtll = get_from_Dynamic_Array(list_of_mtlls, index);
                 if (target_mtll != NULL) {  
                     mtll_free(target_mtll);
                     list_of_mtlls->array[index] = NULL; 
@@ -150,8 +148,6 @@ int main(int argc, char** argv) {
                         printf("List %d\n", list_index_available[i]);
                     }
                     free(list_index_available);
-                }else{
-                    printf("INVALID COMMAND: REMOVE\n");
                 }
             } else {
                 printf("INVALID COMMAND: REMOVE\n");
@@ -168,9 +164,9 @@ int main(int argc, char** argv) {
                 restOfString = strchr(restOfString + 1, ' ');
                 strncpy(insertInput, restOfString + 1, sizeof(insertInput) - 1);
                     
-                struct mtll* target_mtll = get_from_Dynamic_Array(list_of_mtlls, mtll_index);
+                struct head* target_mtll = get_from_Dynamic_Array(list_of_mtlls, mtll_index);
                 if (target_mtll != NULL) {  
-                    Mtll* newhead = mtll_insert(target_mtll, list_index, insertInput);
+                    Head* newhead = mtll_insert(target_mtll, list_index, insertInput);
                     if (newhead != NULL){
                         change_Dynamic_Array(list_of_mtlls, mtll_index, newhead);
                         printf("List %d: ", mtll_index);
@@ -190,9 +186,9 @@ int main(int argc, char** argv) {
             char after_number;
             if (sscanf(input + 7, "%d %d%c", &mtll_index, &list_index, &after_number) == 2 && 
             mtll_index < list_of_mtlls->size) {
-                struct mtll* target_mtll = get_from_Dynamic_Array(list_of_mtlls, mtll_index);
+                struct head* target_mtll = get_from_Dynamic_Array(list_of_mtlls, mtll_index);
                 if (target_mtll != NULL) {  
-                    Mtll* newhead = mtll_delete(target_mtll, list_index);
+                    Head* newhead = mtll_delete(target_mtll, list_index);
                     if (newhead != NULL){
                         change_Dynamic_Array(list_of_mtlls, mtll_index, newhead);
                         printf("List %d: ", mtll_index);
