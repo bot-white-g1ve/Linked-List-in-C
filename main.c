@@ -42,6 +42,7 @@ int main(int argc, char** argv) {
                     if (created_mtll->hasReference == 0){
                         printf("List %zu: ", list_of_mtlls->size);
                     }else {
+                        printf("%d", created_mtll->hasReference);
                         printf("Nested %zu: ", list_of_mtlls->size);
                     }
                     mtll_view_all(created_mtll);
