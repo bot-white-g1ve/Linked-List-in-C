@@ -39,7 +39,7 @@ int main(int argc, char** argv) {
                 }
                 struct head* created_mtll = mtll_create(len, list_of_mtlls);
                 if (created_mtll != NULL){
-                    if (created_mtll->hasReference == false){
+                    if (created_mtll->hasReference == 0){
                         printf("List %zu: ", list_of_mtlls->size);
                     }else {
                         printf("Nested %zu: ", list_of_mtlls->size);
@@ -72,7 +72,7 @@ int main(int argc, char** argv) {
                     idx = list_index_available[i];
                     target_mtll = get_from_Dynamic_Array(list_of_mtlls, idx);
 
-                    if (target_mtll->hasReference == false){
+                    if (target_mtll->hasReference == 0){
                         printf("List %d\n", idx);
                     }else {
                         printf("Nested %d\n", idx);
@@ -103,7 +103,7 @@ int main(int argc, char** argv) {
             if (sscanf(input + 7, "%d%c", &index, &after_number) == 1 && 
             index < list_of_mtlls->size) {
                 struct head* target_mtll = get_from_Dynamic_Array(list_of_mtlls, index);
-                if (target_mtll != NULL && target_mtll->beReferenced == false) {
+                if (target_mtll != NULL && target_mtll->beReferenced == 0) {
                     mtll_free(target_mtll, list_of_mtlls);
                     list_of_mtlls->array[index] = NULL; 
                     printf("List %d has been removed.\n\n", index);
@@ -117,7 +117,7 @@ int main(int argc, char** argv) {
                         idx = list_index_available[i];
                         this_mtll = get_from_Dynamic_Array(list_of_mtlls, idx);
 
-                        if (this_mtll->hasReference == false){
+                        if (this_mtll->hasReference == 0){
                             printf("List %d\n", idx);
                         }else {
                             printf("Nested %d\n", idx);
@@ -147,7 +147,7 @@ int main(int argc, char** argv) {
                     Head* newhead = mtll_insert(target_mtll, list_of_mtlls, list_index, insertInput);
                     if (newhead != NULL){
                         change_Dynamic_Array(list_of_mtlls, mtll_index, newhead);
-                        if (target_mtll->hasReference == false){
+                        if (target_mtll->hasReference == 0){
                             printf("List %d: ", mtll_index);
                         }else {
                             printf("Nested %d: ", mtll_index);
@@ -170,10 +170,10 @@ int main(int argc, char** argv) {
             mtll_index < list_of_mtlls->size) {
                 struct head* target_mtll = get_from_Dynamic_Array(list_of_mtlls, mtll_index);
                 if (target_mtll != NULL) {  
-                    Head* newhead = mtll_delete(target_mtll, list_index);
+                    Head* newhead = mtll_delete(target_mtll, list_index, list_of_mtlls);
                     if (newhead != NULL){
                         change_Dynamic_Array(list_of_mtlls, mtll_index, newhead);
-                        if (target_mtll->hasReference == false){
+                        if (target_mtll->hasReference == 0){
                             printf("List %d: ", mtll_index);
                         }else {
                             printf("Nested %d: ", mtll_index);

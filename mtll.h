@@ -34,8 +34,8 @@ typedef struct mtll {
 typedef struct head {
     bool isEmpty;
     int size;
-    bool hasReference;
-    bool beReferenced;
+    int hasReference;
+    int beReferenced;
     struct mtll* next;
 } Head;
 
@@ -70,11 +70,11 @@ extern void mtll_type_all(struct head *);
 
 extern void mtll_remove(struct mtll **, size_t, struct mtll *);
 
-extern Mtll* mtll_node_create(char*, DynamicArray*, bool*, bool*);
+extern Mtll* mtll_node_create(char*, DynamicArray*, bool*, Head*);
 
 extern Head* mtll_insert(struct head *, DynamicArray*, int, char*);
 
-extern Head* mtll_delete(struct head *, int);
+extern Head* mtll_delete(struct head *, int, DynamicArray*);
 
 extern void mtll_view_nested(struct mtll *, DynamicArray*);
 

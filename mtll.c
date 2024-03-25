@@ -84,13 +84,12 @@ int is_reference_format(char* str){
 struct head *mtll_create(int len, DynamicArray* a) {
     if (len != 0){
         bool has_curly_brace_variable = false;
-        bool has_reference_variable = false;
 
         struct head* head = malloc(sizeof(struct head));
         head->next = NULL;
         head->isEmpty = false;
-        head->hasReference = false;
-        head->beReferenced = false;
+        head->hasReference = 0;
+        head->beReferenced = 0;
         struct mtll* temp = NULL;
 
         char input[128];
@@ -106,7 +105,7 @@ struct head *mtll_create(int len, DynamicArray* a) {
             }
             input[strcspn(input, "\n")] = 0;
 
-            struct mtll* newNode = mtll_node_create(input, a, &has_curly_brace_variable, &has_reference_variable);
+            struct mtll* newNode = mtll_node_create(input, a, &has_curly_brace_variable, head);
 
             if (head->next == NULL) {
                 head->next = newNode;
@@ -117,9 +116,6 @@ struct head *mtll_create(int len, DynamicArray* a) {
         }
 
         if (has_curly_brace_variable == false) {
-            if (has_reference_variable == true){
-                head->hasReference = true;
-            }
             return head;
         }else{
             printf("INVALID COMMAND: NEW\n");
@@ -235,7 +231,7 @@ void mtll_free(struct head* m, DynamicArray* a) {
         if (temp_pointer->t == REFERENCE) {
             Head* referenced_mtll = get_from_Dynamic_Array(a, temp_pointer->value.r);
             if (referenced_mtll != NULL){
-                referenced_mtll->beReferenced = false;
+                referenced_mtll->beReferenced -= 1;
             }
         }
         free(temp_pointer);
@@ -246,7 +242,7 @@ void mtll_free(struct head* m, DynamicArray* a) {
     m = NULL;
 }
 
-Mtll* mtll_node_create(char* input, DynamicArray* a, bool* has_curly_brace_variable, bool* has_reference) {
+Mtll* mtll_node_create(char* input, DynamicArray* a, bool* has_curly_brace_variable, Head* for_mtll) {
     Mtll* newNode = (Mtll*)malloc(sizeof(Mtll));
     //check allocation failure
     if (!newNode) return NULL;
@@ -255,11 +251,11 @@ Mtll* mtll_node_create(char* input, DynamicArray* a, bool* has_curly_brace_varia
     if (num_of_reference != -1){
         if (num_of_reference < a->size){
             Head* nested_mtll = get_from_Dynamic_Array(a, num_of_reference);
-            if (nested_mtll == NULL || nested_mtll->hasReference == true){
+            if (nested_mtll == NULL || nested_mtll->hasReference != 0){
                 *has_curly_brace_variable = true;
             } else {
-                *has_reference = true;
-                nested_mtll->beReferenced = true;
+                for_mtll->hasReference += 1;
+                nested_mtll->beReferenced += 1;
             }
         } else {
             *has_curly_brace_variable = true;
@@ -307,8 +303,7 @@ Head* mtll_insert(struct head* m, DynamicArray* a, int index, char* input){
     if (!m) return NULL;
 
     bool has_curly_brace_variable;
-    bool has_reference_variable;
-    Mtll* newNode = mtll_node_create(input, a, &has_curly_brace_variable, &has_reference_variable);
+    Mtll* newNode = mtll_node_create(input, a, &has_curly_brace_variable, m);
 
     if (has_curly_brace_variable == true){
         return NULL;
@@ -318,9 +313,6 @@ Head* mtll_insert(struct head* m, DynamicArray* a, int index, char* input){
         if (index == 0 || index == -1){
             m->next = newNode;
             m->isEmpty = false;
-            if (has_reference_variable == true){
-                m->hasReference = true;
-            }
             return m;
         }else{
             return NULL;
@@ -365,13 +357,18 @@ Head* mtll_insert(struct head* m, DynamicArray* a, int index, char* input){
     return NULL;
 }
 
-Head* mtll_delete(Head* m, int index){
+Head* mtll_delete(Head* m, int index, DynamicArray* a){
     if (!m) return NULL;
 
     if (m->isEmpty == true){
         return NULL;
     } else if (m->isEmpty == false){
         if (m->next->next == NULL && (index == 0 || index == -1)){
+            if (m->next->t == REFERENCE){
+                m->hasReference -= 1;
+                Head* referenced_mtll = get_from_Dynamic_Array(a, m->next->value.r);
+                referenced_mtll->beReferenced -= 1;
+            }
             free(m->next);
             m->next = NULL;
             m->isEmpty = true;
@@ -402,6 +399,9 @@ Head* mtll_delete(Head* m, int index){
 
         if (currentPosition == index) {
             Mtll* temp_next = current->next;
+            if (current->t == REFERENCE){
+                m->hasReference -= 1;
+            }
             free(current);
             if (previous == NULL){
                 m -> next  = temp_next;
