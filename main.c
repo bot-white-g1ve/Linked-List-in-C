@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
                     printf("INVALID COMMAND: NEW\n");
                     continue;
                 }
-                struct head* created_mtll = mtll_create(len);
+                struct head* created_mtll = mtll_create(len, list_of_mtlls);
                 if (created_mtll != NULL){
                     if (created_mtll->hasReference == false){
                         printf("List %zu: ", list_of_mtlls->size);
@@ -144,7 +144,7 @@ int main(int argc, char** argv) {
                     
                 struct head* target_mtll = get_from_Dynamic_Array(list_of_mtlls, mtll_index);
                 if (target_mtll != NULL) {  
-                    Head* newhead = mtll_insert(target_mtll, list_index, insertInput);
+                    Head* newhead = mtll_insert(target_mtll, list_of_mtlls, list_index, insertInput);
                     if (newhead != NULL){
                         change_Dynamic_Array(list_of_mtlls, mtll_index, newhead);
                         if (target_mtll->hasReference == false){

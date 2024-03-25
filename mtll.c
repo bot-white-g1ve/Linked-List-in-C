@@ -81,7 +81,7 @@ int is_reference_format(char* str){
     return -1;
 }
 
-struct head *mtll_create(int len) {
+struct head *mtll_create(int len, DynamicArray* a) {
     if (len != 0){
         bool has_curly_brace_variable = false;
         bool has_reference_variable = false;
@@ -106,7 +106,7 @@ struct head *mtll_create(int len) {
             }
             input[strcspn(input, "\n")] = 0;
 
-            struct mtll* newNode = mtll_node_create(input, &has_curly_brace_variable, &has_reference_variable);
+            struct mtll* newNode = mtll_node_create(input, a, &has_curly_brace_variable, &has_reference_variable);
 
             if (head->next == NULL) {
                 head->next = newNode;
@@ -240,13 +240,21 @@ void mtll_free(struct head* m) {
     m = NULL;
 }
 
-Mtll* mtll_node_create(char* input, bool* has_curly_brace_variable, bool* has_reference) {
+Mtll* mtll_node_create(char* input, DynamicArray* a, bool* has_curly_brace_variable, bool* has_reference) {
     Mtll* newNode = (Mtll*)malloc(sizeof(Mtll));
     //check allocation failure
     if (!newNode) return NULL;
 
     int num_of_reference = is_reference_format(input);
     if (num_of_reference != -1){
+        if (num_of_reference < a->size){
+            Head* nested_mtll = get_from_Dynamic_Array(a, num_of_reference);
+            if (nested_mtll == NULL || nested_mtll->hasReference == true){
+                *has_curly_brace_variable = true;
+            } 
+        } else {
+            *has_curly_brace_variable = true;
+        }
         *has_reference = true;
         newNode->t = REFERENCE;
         newNode->value.r = num_of_reference;
@@ -287,12 +295,12 @@ Mtll* mtll_node_create(char* input, bool* has_curly_brace_variable, bool* has_re
     return newNode;
 }
 
-Head* mtll_insert(struct head* m, int index, char* input){
+Head* mtll_insert(struct head* m, DynamicArray* a, int index, char* input){
     if (!m) return NULL;
 
     bool has_curly_brace_variable;
     bool has_reference_variable;
-    Mtll* newNode = mtll_node_create(input, &has_curly_brace_variable, &has_reference_variable);
+    Mtll* newNode = mtll_node_create(input, a, &has_curly_brace_variable, &has_reference_variable);
 
     if (has_curly_brace_variable == true){
         return NULL;

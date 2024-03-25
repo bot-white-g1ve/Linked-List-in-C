@@ -56,7 +56,7 @@ extern char* strip(char*);
 
 extern int has_curly_brace(char*);
 
-extern struct head *mtll_create(int len);
+extern struct head *mtll_create(int len, DynamicArray*);
 
 extern void mtll_free(struct head *);
 
@@ -70,9 +70,9 @@ extern void mtll_type_all(struct head *);
 
 extern void mtll_remove(struct mtll **, size_t, struct mtll *);
 
-extern Mtll* mtll_node_create(char*, bool*, bool*);
+extern Mtll* mtll_node_create(char*, DynamicArray*, bool*, bool*);
 
-extern Head* mtll_insert(struct head *, int, char*);
+extern Head* mtll_insert(struct head *, DynamicArray*, int, char*);
 
 extern Head* mtll_delete(struct head *, int);
 
