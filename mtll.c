@@ -250,7 +250,7 @@ Mtll* mtll_node_create(char* input, DynamicArray* a, bool* has_curly_brace_varia
 
     int num_of_reference = is_reference_format(input);
     if (num_of_reference != -1){
-        if (num_of_reference < a->size){
+        if (num_of_reference < a->size && for_mtll->beReferenced == 0){
             Head* nested_mtll = get_from_Dynamic_Array(a, num_of_reference);
             if (nested_mtll == NULL || nested_mtll->hasReference != 0){
                 *has_curly_brace_variable = true;
