@@ -401,6 +401,8 @@ Head* mtll_delete(Head* m, int index, DynamicArray* a){
             Mtll* temp_next = current->next;
             if (current->t == REFERENCE){
                 m->hasReference -= 1;
+                Head* referenced_mtll = get_from_Dynamic_Array(a, current->value.r);
+                referenced_mtll->beReferenced -= 1;
             }
             free(current);
             if (previous == NULL){

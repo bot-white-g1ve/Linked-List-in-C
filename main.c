@@ -17,7 +17,6 @@ void free_everything(DynamicArray* da){
     free(da);
 }
 
-/*
 int main(int argc, char** argv) {
     char input[128];
     DynamicArray* list_of_mtlls = init_Dynamic_Array();
@@ -213,8 +212,8 @@ int main(int argc, char** argv) {
     free_everything(list_of_mtlls);
     return 0;
 }
-*/
 
+/*
 int main(int argc, char** argv) {
     char input[128];
 
@@ -222,3 +221,4 @@ int main(int argc, char** argv) {
         printf("%s", input);
     }
 }
+*/
