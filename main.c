@@ -8,7 +8,7 @@ void free_everything(DynamicArray* da){
 
     for (size_t i = 0; i < da->size; i++) {
         if (da->array[i] != NULL) {
-            mtll_free(da->array[i]);
+            mtll_free(da->array[i], da);
         }
     }
 
@@ -16,7 +16,7 @@ void free_everything(DynamicArray* da){
 
     free(da);
 }
-/*
+
 int main(int argc, char** argv) {
     char input[128];
     DynamicArray* list_of_mtlls = init_Dynamic_Array();
@@ -103,8 +103,8 @@ int main(int argc, char** argv) {
             if (sscanf(input + 7, "%d%c", &index, &after_number) == 1 && 
             index < list_of_mtlls->size) {
                 struct head* target_mtll = get_from_Dynamic_Array(list_of_mtlls, index);
-                if (target_mtll != NULL) {  
-                    mtll_free(target_mtll);
+                if (target_mtll != NULL && target_mtll->beReferenced == false) {
+                    mtll_free(target_mtll, list_of_mtlls);
                     list_of_mtlls->array[index] = NULL; 
                     printf("List %d has been removed.\n\n", index);
 
@@ -212,8 +212,8 @@ int main(int argc, char** argv) {
     free_everything(list_of_mtlls);
     return 0;
 }
-*/
 
+/*
 int main(int argc, char** argv) {
     char input[128];
 
@@ -221,3 +221,4 @@ int main(int argc, char** argv) {
         printf("%s", input);
     }
 }
+*/

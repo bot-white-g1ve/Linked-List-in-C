@@ -226,12 +226,18 @@ void mtll_type_all(struct head* m){
     }
 }
 
-void mtll_free(struct head* m) {
+void mtll_free(struct head* m, DynamicArray* a) {
     struct mtll* temp_pointer = m->next;
     struct mtll* temp_next = NULL;
     
     while (temp_pointer != NULL) {
         temp_next = temp_pointer->next;
+        if (temp_pointer->t == REFERENCE) {
+            Head* referenced_mtll = get_from_Dynamic_Array(a, temp_pointer->value.r);
+            if (referenced_mtll != NULL){
+                referenced_mtll->beReferenced = false;
+            }
+        }
         free(temp_pointer);
         temp_pointer = temp_next;
     }
@@ -251,11 +257,13 @@ Mtll* mtll_node_create(char* input, DynamicArray* a, bool* has_curly_brace_varia
             Head* nested_mtll = get_from_Dynamic_Array(a, num_of_reference);
             if (nested_mtll == NULL || nested_mtll->hasReference == true){
                 *has_curly_brace_variable = true;
-            } 
+            } else {
+                *has_reference = true;
+                nested_mtll->beReferenced = true;
+            }
         } else {
             *has_curly_brace_variable = true;
         }
-        *has_reference = true;
         newNode->t = REFERENCE;
         newNode->value.r = num_of_reference;
         newNode->next = NULL;

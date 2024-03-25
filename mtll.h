@@ -58,7 +58,7 @@ extern int has_curly_brace(char*);
 
 extern struct head *mtll_create(int len, DynamicArray*);
 
-extern void mtll_free(struct head *);
+extern void mtll_free(struct head *, DynamicArray*);
 
 extern void mtll_view(struct mtll *);
 
