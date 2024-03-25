@@ -125,7 +125,8 @@ struct head *mtll_create(int len, DynamicArray* a) {
         Head* head = (Head*)malloc(sizeof(Head));
         head -> next = NULL;
         head -> isEmpty = true;
-
+        head->hasReference = 0;
+        head->beReferenced = 0;
         return head;
     }
 
