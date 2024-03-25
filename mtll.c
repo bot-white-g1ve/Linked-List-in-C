@@ -5,6 +5,48 @@
 #include <ctype.h>
 #include <stdbool.h>
 
+DynamicArray* init_Dynamic_Array(){
+    DynamicArray* da = malloc(sizeof(DynamicArray));
+    da->array = NULL;
+    da->size = 0;
+    return da;
+}
+
+void add_to_Dynamic_Array(DynamicArray* da, struct head* m){
+    da->size += 1;
+    da->array = realloc(da->array, da->size * sizeof(struct mtll));
+    if (da->array == NULL){
+        printf("Dynamic Array realloc fail\n");
+        exit(1);
+    }
+    da->array[da->size-1] = m;
+}
+
+struct head* get_from_Dynamic_Array(DynamicArray* da, int idx){
+    return da->array[idx];
+}
+
+// use a new parameter size to return the size of list_availiable
+int* count_Dynamic_Array(DynamicArray* da, int* size){
+    int* lists_available = malloc(sizeof(int) * da->size);
+    int counter = 0;
+    for (int index = 0; index < da->size; index++){
+        if (da->array[index] != NULL){
+            lists_available[counter] = index;
+            counter++;
+        }
+    }
+
+    *size = counter; 
+
+    return lists_available;
+}
+
+void change_Dynamic_Array(DynamicArray* da, int idx, Head* new){
+    da->array[idx] = new;
+    return;
+}
+
 char* strip(char* str){
     char* end;
 
@@ -355,6 +397,77 @@ Head* mtll_delete(Head* m, int index){
     }
 
     return NULL;
+}
+
+void mtll_view_nested(struct mtll* m, DynamicArray* da) {
+    switch (m->t) {
+        case INT:
+            printf("%d", m->value.i);
+            break;
+        case FLOAT:
+            printf("%.2f", m->value.f);
+            break;
+        case CHAR:
+            printf("%c", m->value.c);
+            break;
+        case STR:
+            printf("%s", m->value.s);
+            break;
+        case REFERENCE:
+            printf("{");
+            Head* nested_mtll = get_from_Dynamic_Array(da, m->value.r);
+            mtll_view_all_without_nextLine(nested_mtll);
+            printf("}");
+            break;
+        default:
+            printf("Unknown type of mtll.\n");
+    }
+}
+
+void mtll_view_nested_all(struct head* m, DynamicArray* da){
+    if (!m){
+        printf("this pointer is NULL.\n");
+        return;
+    }
+    
+    if (m->isEmpty == false){
+        struct mtll* temp;
+        temp = m->next;
+
+        mtll_view_nested(temp, da);
+
+        while (temp->next != NULL){
+            printf(" -> ");
+            temp = temp->next;
+            mtll_view_nested(temp, da);
+        }
+        printf("\n");
+    }else if (m->isEmpty == true){
+        printf("\n");
+    }
+}
+
+void mtll_view_all_without_nextLine(struct head* m){
+    if (!m){
+        printf("this pointer is NULL.\n");
+        return;
+    }
+    
+    if (m->isEmpty == false){
+        struct mtll* temp;
+        temp = m->next;
+
+        mtll_view(temp);
+
+        while (temp->next != NULL){
+            printf(" -> ");
+            temp = temp->next;
+            mtll_view(temp);
+        }
+        //printf("\n");
+    }else if (m->isEmpty == true){
+        //printf("\n");
+    }
 }
 
 //TODO: all other functions

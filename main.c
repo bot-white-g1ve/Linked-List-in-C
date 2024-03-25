@@ -3,48 +3,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-DynamicArray* init_Dynamic_Array(){
-    DynamicArray* da = malloc(sizeof(DynamicArray));
-    da->array = NULL;
-    da->size = 0;
-    return da;
-}
-
-void add_to_Dynamic_Array(DynamicArray* da, struct head* m){
-    da->size += 1;
-    da->array = realloc(da->array, da->size * sizeof(struct mtll));
-    if (da->array == NULL){
-        printf("Dynamic Array realloc fail\n");
-        exit(1);
-    }
-    da->array[da->size-1] = m;
-}
-
-struct head* get_from_Dynamic_Array(DynamicArray* da, int idx){
-    return da->array[idx];
-}
-
-// use a new parameter size to return the size of list_availiable
-int* count_Dynamic_Array(DynamicArray* da, int* size){
-    int* lists_available = malloc(sizeof(int) * da->size);
-    int counter = 0;
-    for (int index = 0; index < da->size; index++){
-        if (da->array[index] != NULL){
-            lists_available[counter] = index;
-            counter++;
-        }
-    }
-
-    *size = counter; 
-
-    return lists_available;
-}
-
-void change_Dynamic_Array(DynamicArray* da, int idx, Head* new){
-    da->array[idx] = new;
-    return;
-}
-
 void free_everything(DynamicArray* da){
     if (da == NULL) return;
 
@@ -59,7 +17,6 @@ void free_everything(DynamicArray* da){
     free(da);
 }
 
-/*
 int main(int argc, char** argv) {
     char input[128];
     DynamicArray* list_of_mtlls = init_Dynamic_Array();
@@ -231,17 +188,32 @@ int main(int argc, char** argv) {
             } else {
                 printf("INVALID COMMAND: DELETE\n");
             }
-        } else{
+        }else if (strncmp(input, "VIEW-NESTED ", 12) == 0 || strcmp(input, "VIEW-NESTED") == 0){
+            int index;
+            char after_number;
+            if (sscanf(input + 12, "%d%c", &index, &after_number) == 1 && 
+            index < list_of_mtlls->size) {
+                struct head* target_mtll = get_from_Dynamic_Array(list_of_mtlls, index);
+                // check if it is removed
+                if (target_mtll != NULL) {  
+                    mtll_view_nested_all(target_mtll, list_of_mtlls);
+                }else{
+                    printf("INVALID COMMAND: VIEW-NESTED\n");
+                } 
+            } else {
+                printf("INVALID COMMAND: VIEW-NESTED\n");
+            }
+        }else{
             printf("INVALID COMMAND: INPUT\n");
         }
     }
 
-    //printf("Free Everything.\n");
+    printf("Free Everything.\n");
     free_everything(list_of_mtlls);
     return 0;
 }
-*/
 
+/*
 int main(int argc, char** argv) {
     char input[128];
 
@@ -249,3 +221,4 @@ int main(int argc, char** argv) {
         printf("%s", input);
     }
 }
+*/

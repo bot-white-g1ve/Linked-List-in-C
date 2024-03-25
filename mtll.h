@@ -42,6 +42,16 @@ typedef struct head {
 // A few suggested function prototypes:
 // Feel free to change or improve these as you need.
 
+extern DynamicArray* init_Dynamic_Array();
+
+extern void add_to_Dynamic_Array(DynamicArray*, struct head*);
+
+extern struct head* get_from_Dynamic_Array(DynamicArray*, int);
+
+extern int* count_Dynamic_Array(DynamicArray*, int*);
+
+extern void change_Dynamic_Array(DynamicArray*, int, Head*);
+
 extern char* strip(char*);
 
 extern int has_curly_brace(char*);
@@ -65,5 +75,11 @@ extern Mtll* mtll_node_create(char*, bool*, bool*);
 extern Head* mtll_insert(struct head *, int, char*);
 
 extern Head* mtll_delete(struct head *, int);
+
+extern void mtll_view_nested(struct mtll *, DynamicArray*);
+
+extern void mtll_view_nested_all(struct head *, DynamicArray*);
+
+extern void mtll_view_all_without_nextLine(struct head*);
 
 #endif
