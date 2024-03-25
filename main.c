@@ -208,7 +208,7 @@ int main(int argc, char** argv) {
         }
     }
 
-    printf("Free Everything.\n");
+    //printf("Free Everything.\n");
     free_everything(list_of_mtlls);
     return 0;
 }
