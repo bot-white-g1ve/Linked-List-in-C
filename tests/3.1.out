@@ -1,0 +1,10 @@
+List 0: a
+Nested 1: {List 0} -> b
+{List 0} -> b
+{a} -> b
+Number of lists: 2
+List 0
+Nested 1
+Nested 1: {List 0} -> {List 0} -> b
+{List 0} -> {List 0} -> b
+{a} -> {a} -> b

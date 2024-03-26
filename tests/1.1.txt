@@ -1,0 +1,16 @@
+NEW 1
+a
+NEW
+NEW0
+NEW 0
+NEW 5
+ 6e-1
+ 4 
+ 4 4
+
+   
+NEW 2
+{
+  1}
+NEW 4
+aß

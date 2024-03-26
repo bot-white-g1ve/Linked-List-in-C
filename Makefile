@@ -2,6 +2,8 @@ CC=gcc
 FLAGS=-Wall -Werror
 OBJS=mtll.o main.o
 TARGET=mtll
+CFILE=main.c mtll.c
+TESTDIR=tests
 
 all: $(TARGET)
 
@@ -11,14 +13,18 @@ $(TARGET): $(OBJS)
 %.o: %.c
 	$(CC) -c $(FLAGS) $< -o $@
 
+build: ${TARGET}
+
 tests: $(TARGET)
-	echo "Make my tests!"
 
 .PHONY:
 run_tests: tests
-	echo "Run my tests!"
+	bash run_tests.sh ${TESTDIR}
 
 .PHONY:
 clean:
 	rm -f $(OBJS)
 	rm -f $(TARGET)
+
+build_debug:
+	$(CC) -fsanitize=address -o ${TARGET} ${CFILE}

@@ -12,7 +12,7 @@ DynamicArray* init_Dynamic_Array(){
     return da;
 }
 
-void add_to_Dynamic_Array(DynamicArray* da, struct head* m){
+int add_to_Dynamic_Array(DynamicArray* da, struct head* m){
     da->size += 1;
     da->array = realloc(da->array, da->size * sizeof(struct mtll));
     if (da->array == NULL){
@@ -20,6 +20,7 @@ void add_to_Dynamic_Array(DynamicArray* da, struct head* m){
         exit(1);
     }
     da->array[da->size-1] = m;
+    return da->size-1;
 }
 
 struct head* get_from_Dynamic_Array(DynamicArray* da, int idx){
@@ -90,6 +91,7 @@ struct head *mtll_create(int len, DynamicArray* a) {
         head->isEmpty = false;
         head->hasReference = 0;
         head->beReferenced = 0;
+        head->idx = -1;
         struct mtll* temp = NULL;
 
         char input[128];
@@ -127,6 +129,7 @@ struct head *mtll_create(int len, DynamicArray* a) {
         head -> isEmpty = true;
         head->hasReference = 0;
         head->beReferenced = 0;
+        head->idx = -1;
         return head;
     }
 
@@ -223,16 +226,18 @@ void mtll_type_all(struct head* m){
     }
 }
 
-void mtll_free(struct head* m, DynamicArray* a) {
+void mtll_free(struct head* m, DynamicArray* a, bool free_everything) {
     struct mtll* temp_pointer = m->next;
     struct mtll* temp_next = NULL;
     
     while (temp_pointer != NULL) {
         temp_next = temp_pointer->next;
-        if (temp_pointer->t == REFERENCE) {
-            Head* referenced_mtll = get_from_Dynamic_Array(a, temp_pointer->value.r);
-            if (referenced_mtll != NULL){
-                referenced_mtll->beReferenced -= 1;
+        if (!free_everything){
+            if (temp_pointer->t == REFERENCE) {
+                Head* referenced_mtll = get_from_Dynamic_Array(a, temp_pointer->value.r);
+                if (referenced_mtll != NULL){
+                    referenced_mtll->beReferenced -= 1;
+                }
             }
         }
         free(temp_pointer);
@@ -250,7 +255,7 @@ Mtll* mtll_node_create(char* input, DynamicArray* a, bool* has_curly_brace_varia
 
     int num_of_reference = is_reference_format(input);
     if (num_of_reference != -1){
-        if (num_of_reference < a->size && for_mtll->beReferenced == 0){
+        if (num_of_reference < a->size && for_mtll->beReferenced == 0 && num_of_reference != for_mtll->idx){
             Head* nested_mtll = get_from_Dynamic_Array(a, num_of_reference);
             if (nested_mtll == NULL || nested_mtll->hasReference != 0){
                 *has_curly_brace_variable = true;

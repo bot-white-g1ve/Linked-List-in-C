@@ -1,0 +1,12 @@
+List 0: a
+a
+List 1:  -> 0.60
+ -> 0.60
+List 2:     -> 0.06 -> a
+    -> 0.06 -> a
+INVALID COMMAND: NEW
+INVALID COMMAND: VIEW
+Number of lists: 3
+List 0
+List 1
+List 2

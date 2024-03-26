@@ -8,7 +8,7 @@ void free_everything(DynamicArray* da){
 
     for (size_t i = 0; i < da->size; i++) {
         if (da->array[i] != NULL) {
-            mtll_free(da->array[i], da);
+            mtll_free(da->array[i], da, true);
         }
     }
 
@@ -45,7 +45,8 @@ int main(int argc, char** argv) {
                         printf("Nested %zu: ", list_of_mtlls->size);
                     }
                     mtll_view_all(created_mtll);
-                    add_to_Dynamic_Array(list_of_mtlls, created_mtll);
+                    int idx_created_mtll = add_to_Dynamic_Array(list_of_mtlls, created_mtll);
+                    created_mtll->idx = idx_created_mtll;
                 } 
             } else {
                 printf("INVALID COMMAND: NEW\n");
@@ -104,7 +105,7 @@ int main(int argc, char** argv) {
             index < list_of_mtlls->size) {
                 struct head* target_mtll = get_from_Dynamic_Array(list_of_mtlls, index);
                 if (target_mtll != NULL && target_mtll->beReferenced == 0) {
-                    mtll_free(target_mtll, list_of_mtlls);
+                    mtll_free(target_mtll, list_of_mtlls, false);
                     list_of_mtlls->array[index] = NULL; 
                     printf("List %d has been removed.\n\n", index);
 

@@ -1,0 +1,8 @@
+NEW 1
+a
+DELETE 0 0
+DELETE 0 0
+NEW 2
+a
+b
+DELETE 1 -1

@@ -36,6 +36,7 @@ typedef struct head {
     int size;
     int hasReference;
     int beReferenced;
+    int idx;
     struct mtll* next;
 } Head;
 
@@ -44,7 +45,7 @@ typedef struct head {
 
 extern DynamicArray* init_Dynamic_Array();
 
-extern void add_to_Dynamic_Array(DynamicArray*, struct head*);
+extern int add_to_Dynamic_Array(DynamicArray*, struct head*);
 
 extern struct head* get_from_Dynamic_Array(DynamicArray*, int);
 
@@ -58,7 +59,7 @@ extern int has_curly_brace(char*);
 
 extern struct head *mtll_create(int len, DynamicArray*);
 
-extern void mtll_free(struct head *, DynamicArray*);
+extern void mtll_free(struct head *, DynamicArray*, bool);
 
 extern void mtll_view(struct mtll *);
 

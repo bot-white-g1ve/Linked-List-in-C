@@ -1,0 +1,16 @@
+NEW 1
+a
+VIEW 0
+NEW 2
+
+ 6e-1
+VIEW 1
+NEW 3
+   
+   0.06  
+a
+VIEW 2
+NEW 1
+{
+VIEW 3
+VIEW ALL
