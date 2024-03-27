@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 void free_everything(DynamicArray* da){
+    /*
     if (da == NULL) return;
 
     for (size_t i = 0; i < da->size; i++) {
@@ -15,6 +16,8 @@ void free_everything(DynamicArray* da){
     free(da->array);
 
     free(da);
+    */
+   printf("yes");
 }
 
 int main(int argc, char** argv) {

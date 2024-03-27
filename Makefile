@@ -27,4 +27,4 @@ clean:
 	rm -f $(TARGET)
 
 build_debug:
-	$(CC) -fsanitize=address -o ${TARGET} ${CFILE}
+	$(CC) -fsanitize=address -g -o ${TARGET} ${CFILE}

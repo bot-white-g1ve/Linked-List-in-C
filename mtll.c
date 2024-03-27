@@ -308,7 +308,7 @@ Mtll* mtll_node_create(char* input, DynamicArray* a, bool* has_curly_brace_varia
 Head* mtll_insert(struct head* m, DynamicArray* a, int index, char* input){
     if (!m) return NULL;
 
-    bool has_curly_brace_variable;
+    bool has_curly_brace_variable = false;
     Mtll* newNode = mtll_node_create(input, a, &has_curly_brace_variable, m);
 
     if (has_curly_brace_variable == true){
